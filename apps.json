@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-27T13:35:58Z",
+  "updatedAt": "2026-11-27T14:08:37Z",
   "developer": {
     "displayName": "Danillo Santos",
     "brand": "DAS Apps",
-    "avatarUrl": null,
+    "avatarUrl": "assets/developer/avatar.png",
     "bio": {
       "pt-BR": "Danillo Santos desenvolve os aplicativos da marca DAS Apps.",
       "en": "Danillo Santos develops the apps of the DAS Apps brand.",
