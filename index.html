@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>Apps</title>
-<link rel="icon" href="data:,">
+<link id="favicon" rel="icon" href="data:,">
 <style>
   :root { color-scheme: light dark; --bg:#f6f7f9; --card:#fff; --text:#15181d; --muted:#5b6472; --line:#e2e6ec; --accent:#2457d6; }
   @media (prefers-color-scheme: dark) { :root { --bg:#0f1115; --card:#181b21; --text:#eef0f4; --muted:#a4adbb; --line:#2a2f38; --accent:#7ea2ff; } }
@@ -93,11 +93,11 @@ function safeUrl(value, hosts) {
       (!hosts || hosts.includes(u.hostname)) ? u.href : null;
   } catch { return null; }
 }
-function fillMark(node, path, fallback) {
+function fillMark(node, path, fallback, onLoad) {
   node.textContent = fallback;
   if (typeof path !== 'string' || !/^assets\/[\w\/-][\w.\/-]*(\?v=\d+)?$/.test(path) || path.includes('..')) return;
   const img = el('img', { alt:'' });
-  img.onload = () => node.replaceChildren(img);
+  img.onload = () => { node.replaceChildren(img); onLoad?.(path); };
   img.src = path;
 }
 
@@ -158,7 +158,8 @@ function render() {
   $('brand').textContent = dev.brand;
   $('bio').textContent = pick(dev.bio);
   $('avatar').setAttribute('aria-label', dev.displayName);
-  fillMark($('avatar'), dev.avatarUrl, 'DS');
+  // O ícone da guia só muda se o avatar carregar.
+  fillMark($('avatar'), dev.avatarUrl, 'DS', (src) => { $('favicon').href = src; });
   document.title = dev.displayName + ' — ' + dev.brand;
   const site = safeUrl(dev.websiteUrl);
   $('website').hidden = !site;
