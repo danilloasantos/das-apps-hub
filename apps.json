@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-27T15:50:30Z",
+  "updatedAt": "2026-11-27T17:40:36Z",
   "developer": {
     "displayName": "Danillo Santos",
     "brand": "DAS Apps",
@@ -80,7 +80,7 @@
         "en": "Set dates, decide as a group and share responsibilities. DASoma aims to organize get-togethers and everyday group life around three areas: scheduling, deciding and organizing.",
         "es": "Acuerda fechas, decide en grupo y reparte responsabilidades. La propuesta de DASoma es organizar encuentros y el día a día en grupo en tres frentes: coordinar fechas, decidir y organizar."
       },
-      "iconUrl": null,
+      "iconUrl": "assets/apps/dasoma.png",
       "platforms": ["android"],
       "links": { "android": null, "ios": null, "web": null },
       "websiteUrl": null,
