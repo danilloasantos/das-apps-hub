@@ -1,4 +1,4 @@
-// Verifica o catálogo publicado: HTTP 200, JSON, acesso anônimo/CORS e imagens.
+// Verifica o catálogo publicado: HTTP 200, JSON, acesso anônimo/CORS, imagens e links oficiais.
 // Uso: node scripts/verify-endpoint.mjs [url]
 const url = process.argv[2] ?? 'https://danilloasantos.github.io/das-apps-hub/apps.json';
 let failed = false;
@@ -18,6 +18,12 @@ try {
   for (const path of images) {
     const img = await get(new URL(path, res.url));
     check(img.status === 200 && (img.headers.get('content-type') ?? '').startsWith('image/'), `HTTP ${img.status} ${path}`);
+  }
+  for (const app of catalog.apps.filter((a) => a.published === true)) {
+    for (const link of [...Object.values(app.links), app.websiteUrl].filter(Boolean)) {
+      const r = await get(link);
+      check(r.status === 200, `HTTP ${r.status} ${app.id} ${link}`);
+    }
   }
 } catch (e) {
   check(false, e.message);

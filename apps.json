@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-27T14:08:37Z",
+  "updatedAt": "2026-11-27T15:37:17Z",
   "developer": {
     "displayName": "Danillo Santos",
     "brand": "DAS Apps",
     "avatarUrl": "assets/developer/avatar.png",
     "bio": {
-      "pt-BR": "Danillo Santos desenvolve os aplicativos da marca DAS Apps.",
-      "en": "Danillo Santos develops the apps of the DAS Apps brand.",
-      "es": "Danillo Santos desarrolla las aplicaciones de la marca DAS Apps."
+      "pt-BR": "Desenvolvedor independente, apaixonado por tecnologia, inovação e desenvolvimento de software. Crio aplicativos que transformam necessidades do cotidiano em soluções simples, práticas e acessíveis. Meu objetivo é conectar tecnologia a problemas reais, desenvolvendo ferramentas que facilitem a vida das pessoas.",
+      "en": "Independent developer passionate about technology, innovation and software development. I create apps that turn everyday needs into simple, practical and accessible solutions. My goal is to connect technology to real problems, building tools that make people's lives easier.",
+      "es": "Desarrollador independiente, apasionado por la tecnología, la innovación y el desarrollo de software. Creo aplicaciones que convierten las necesidades cotidianas en soluciones simples, prácticas y accesibles. Mi objetivo es conectar la tecnología con problemas reales, desarrollando herramientas que faciliten la vida de las personas."
     },
     "websiteUrl": null
   },
@@ -16,32 +16,97 @@
     {
       "id": "odomo",
       "name": "Odomo",
-      "packageName": null,
+      "packageName": "com.danilloasantos.odomo",
+      "category": { "pt-BR": "Automóveis e veículos", "en": "Auto & Vehicles", "es": "Autos y vehículos" },
       "description": {
-        "pt-BR": "Aplicativo do ecossistema DAS Apps. Mais informações em breve.",
-        "en": "An app from the DAS Apps ecosystem. More information coming soon.",
-        "es": "Aplicación del ecosistema DAS Apps. Más información próximamente."
+        "pt-BR": "Cuide da sua motocicleta de forma inteligente. Organize o histórico de manutenções, acompanhe os serviços realizados e receba lembretes para manter sua moto sempre em dia.",
+        "en": "Take smart care of your motorcycle. Organize your maintenance history, keep track of completed services and get reminders to keep your bike always up to date.",
+        "es": "Cuida tu motocicleta de forma inteligente. Organiza el historial de mantenimiento, sigue los servicios realizados y recibe recordatorios para tener tu moto siempre al día."
       },
-      "iconUrl": null,
-      "links": { "android": null, "ios": null, "web": null },
-      "published": false,
-      "featured": false,
+      "iconUrl": "assets/apps/odomo.png",
+      "platforms": ["android"],
+      "links": { "android": "https://play.google.com/store/apps/details?id=com.danilloasantos.odomo", "ios": null, "web": null },
+      "websiteUrl": "https://moto-em-dia.web.app/",
+      "status": "published",
+      "published": true,
+      "featured": true,
       "order": 10
     },
     {
       "id": "puller",
       "name": "Puller",
-      "packageName": null,
+      "packageName": "com.danilloasantos.puller",
+      "category": { "pt-BR": "Enquetes e votações", "en": "Polls & voting", "es": "Encuestas y votaciones" },
       "description": {
-        "pt-BR": "Aplicativo do ecossistema DAS Apps. Mais informações em breve.",
-        "en": "An app from the DAS Apps ecosystem. More information coming soon.",
-        "es": "Aplicación del ecosistema DAS Apps. Más información próximamente."
+        "pt-BR": "Crie enquetes, compartilhe perguntas e descubra a opinião das pessoas. Uma maneira simples e prática de realizar votações e tomar decisões em grupo.",
+        "en": "Create polls, share questions and find out what people think. A simple, practical way to run votes and make group decisions.",
+        "es": "Crea encuestas, comparte preguntas y descubre lo que opina la gente. Una forma simple y práctica de hacer votaciones y tomar decisiones en grupo."
       },
-      "iconUrl": null,
+      "iconUrl": "assets/apps/puller.png",
+      "platforms": ["android"],
+      "links": { "android": "https://play.google.com/store/apps/details?id=com.danilloasantos.puller", "ios": null, "web": null },
+      "websiteUrl": null,
+      "status": "published",
+      "published": true,
+      "featured": true,
+      "order": 20
+    },
+    {
+      "id": "dascore",
+      "name": "DASCore",
+      "packageName": "com.danilloasantos.dascore",
+      "category": { "pt-BR": "Esportes e jogos", "en": "Sports & games", "es": "Deportes y juegos" },
+      "description": {
+        "pt-BR": "Transforme seu celular em um placar digital para jogos de cartas, esportes e jogos de tabuleiro. Personalize regras, utilize cronômetros, role dados, realize sorteios e organize campeonatos com seus amigos.",
+        "en": "Turn your phone into a digital scoreboard for card games, sports and board games. Customize rules, use timers, roll dice, run random draws and organize tournaments with your friends.",
+        "es": "Convierte tu celular en un marcador digital para juegos de cartas, deportes y juegos de mesa. Personaliza reglas, usa cronómetros, lanza dados, haz sorteos y organiza campeonatos con tus amigos."
+      },
+      "iconUrl": "assets/apps/dascore.png",
+      "platforms": ["android"],
       "links": { "android": null, "ios": null, "web": null },
+      "websiteUrl": null,
+      "status": "coming_soon",
       "published": false,
       "featured": false,
-      "order": 20
+      "order": 30
+    },
+    {
+      "id": "dasoma",
+      "name": "DASoma",
+      "packageName": "com.danilloasantos.dasoma",
+      "category": { "pt-BR": "Produtividade", "en": "Productivity", "es": "Productividad" },
+      "description": {
+        "pt-BR": "Combine datas, decida em grupo e divida responsabilidades. A proposta do DASoma é organizar encontros e o dia a dia em grupo em três frentes: Vamos marcar?, Vamos decidir? e Vamos organizar?",
+        "en": "Set dates, decide as a group and share responsibilities. DASoma aims to organize get-togethers and everyday group life around three areas: scheduling, deciding and organizing.",
+        "es": "Acuerda fechas, decide en grupo y reparte responsabilidades. La propuesta de DASoma es organizar encuentros y el día a día en grupo en tres frentes: coordinar fechas, decidir y organizar."
+      },
+      "iconUrl": null,
+      "platforms": ["android"],
+      "links": { "android": null, "ios": null, "web": null },
+      "websiteUrl": null,
+      "status": "coming_soon",
+      "published": false,
+      "featured": false,
+      "order": 40
+    },
+    {
+      "id": "dasmoto",
+      "name": "DAS Moto",
+      "packageName": null,
+      "category": { "pt-BR": "Gestão empresarial", "en": "Business management", "es": "Gestión empresarial" },
+      "description": {
+        "pt-BR": "Sistema de gestão desenvolvido para oficinas de motocicletas. Organize ordens de serviço, clientes, motos, mecânicos e históricos de manutenção em uma plataforma integrada, acessível pelo computador ou celular.",
+        "en": "A management system built for motorcycle repair shops. Organize work orders, customers, motorcycles, mechanics and maintenance histories in one integrated platform, accessible from a computer or phone.",
+        "es": "Sistema de gestión desarrollado para talleres de motocicletas. Organiza órdenes de servicio, clientes, motos, mecánicos e historiales de mantenimiento en una plataforma integrada, accesible desde la computadora o el celular."
+      },
+      "iconUrl": "assets/apps/dasmoto.png",
+      "platforms": ["web", "pwa"],
+      "links": { "android": null, "ios": null, "web": null },
+      "websiteUrl": null,
+      "status": "coming_soon",
+      "published": false,
+      "featured": false,
+      "order": 50
     }
   ]
 }

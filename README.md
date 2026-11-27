@@ -9,66 +9,10 @@ Alterar o conteúdo não exige nova build dos apps.
 
 > Este repositório é público. Nunca inclua credenciais, tokens ou dados privados.
 
-## Publicar alterações
+## Cadastrar e atualizar apps
 
-1. Edite `apps.json` e atualize `updatedAt` (UTC, `AAAA-MM-DDTHH:MM:SSZ`).
-2. Valide (Node 22+, sem `npm install`):
-   ```sh
-   node scripts/validate.mjs
-   node --test scripts/validate.test.mjs
-   ```
-3. `git add -A`, `git commit -m "catálogo: ..."`, `git push`.
-4. O GitHub Actions valida de novo e só então publica no Pages. Acompanhe com `gh run watch`.
-5. Confira (o cache do Pages pode levar cerca de 10 min):
-   ```sh
-   node scripts/verify-endpoint.mjs
-   ```
-
-Nos apps, a mudança aparece quando o cache de 24 h expira ou na atualização manual.
-
-## Tarefas
-
-| Tarefa | Como fazer |
-| --- | --- |
-| Cadastrar app | Copie o modelo abaixo para `apps[]`. |
-| Atualizar informações | Edite os campos do app. **Nunca mude o `id`.** |
-| Alterar avatar | Salve em `assets/developer/avatar.png` (quadrado, 512×512, até 512 KB) e defina `"avatarUrl": "assets/developer/avatar.png"`. Nas trocas seguintes, incremente: `...avatar.png?v=2`. |
-| Alterar logotipo | Salve em `assets/apps/<id>.png` e aponte `iconUrl`. Nas trocas, use `?v=2`, `?v=3`... |
-| Destacar | `"featured": true`. |
-| Ordenar | `order` crescente; destaques vêm primeiro. |
-| Ocultar | `"published": false`. Não apague a entrada. |
-| Limitar região | `"regions": {"include": ["BR"]}` **ou** `{"exclude": ["US"]}`. |
-
-Ocultar não é sigilo: o `apps.json` é público, inclusive apps não publicados e o histórico do Git.
-
-## Modelo de app
-
-Todos os campos são obrigatórios, exceto `regions`. Use `null` quando não houver valor.
-
-```json
-{
-  "id": "meu-app",
-  "name": "Meu App",
-  "packageName": null,
-  "description": { "pt-BR": "...", "en": "...", "es": "..." },
-  "iconUrl": null,
-  "links": { "android": null, "ios": null, "web": null },
-  "published": false,
-  "featured": false,
-  "order": 30
-}
-```
-
-Para publicar (`published: true`), informe ao menos um link oficial já funcionando:
-
-- Android: `https://play.google.com/store/apps/details?id=<packageName>`
-- iOS: `https://apps.apple.com/...`
-- Web: apenas hosts permitidos (hoje `danilloasantos.github.io`).
-
-Antes de publicar, confirme na loja que a ficha é da conta oficial. Existem apps de terceiros com os mesmos nomes.
-
-Um novo host web precisa ser incluído em `scripts/validate.mjs`, `index.html` e `INTEGRATION.md`;
-apps já distribuídos só o aceitarão após uma nova build.
+Veja [docs/PUBLISH_APP.md](docs/PUBLISH_APP.md): cadastro, "Em breve" → publicado, links, textos, ícones,
+avatar, ordem, ocultação e publicação.
 
 ## Hospedagem
 

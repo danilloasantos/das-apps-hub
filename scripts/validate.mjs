@@ -10,6 +10,8 @@ export const HOSTS = {
   ios: ['apps.apple.com'],
   web: ['danilloasantos.github.io'],
 };
+export const STATUSES = ['published', 'coming_soon', 'hidden'];
+export const PLATFORMS = ['android', 'ios', 'web', 'pwa'];
 const MAX_IMAGE = 512 * 1024;
 const MAX_CATALOG = 256 * 1024;
 const IMAGE_PATH = /^assets\/(developer|apps)\/[a-z0-9][a-z0-9._-]*\.(png|jpg|jpeg|webp)(\?v=\d+)?$/;
@@ -82,8 +84,8 @@ export function validate(catalog, root) {
   const packages = new Set();
   catalog.apps.forEach((app, i) => {
     const at = `apps[${i}]`;
-    if (!shape(app, at, ['id', 'name', 'packageName', 'description', 'iconUrl', 'links',
-      'published', 'featured', 'order'], ['regions'])) return;
+    if (!shape(app, at, ['id', 'name', 'packageName', 'category', 'description', 'iconUrl', 'platforms',
+      'links', 'websiteUrl', 'status', 'published', 'featured', 'order'], ['regions'])) return;
 
     if (typeof app.id !== 'string' || !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(app.id))
       fail(`${at}.id`, 'use minúsculas, números e hífens');
@@ -98,7 +100,21 @@ export function validate(catalog, root) {
       packages.add(app.packageName);
     }
 
+    translations(app.category, `${at}.category`);
     translations(app.description, `${at}.description`);
+    if (app.websiteUrl !== null) httpsUrl(app.websiteUrl, `${at}.websiteUrl`);
+
+    const platforms = Array.isArray(app.platforms) ? app.platforms : [];
+    if (!platforms.length || new Set(platforms).size !== platforms.length ||
+      !platforms.every((p) => PLATFORMS.includes(p)))
+      fail(`${at}.platforms`, `lista sem repetição com: ${PLATFORMS.join(', ')}`);
+    if (app.packageName !== null && !platforms.includes('android'))
+      fail(`${at}.packageName`, 'só se aplica a apps com plataforma android');
+
+    // published é mantido para consumidores antigos e precisa concordar com status.
+    if (!STATUSES.includes(app.status)) fail(`${at}.status`, `use: ${STATUSES.join(', ')}`);
+    if (app.published !== (app.status === 'published'))
+      fail(`${at}.published`, 'deve ser true somente quando status é "published"');
     image(app.iconUrl, `${at}.iconUrl`);
     for (const k of ['published', 'featured'])
       if (typeof app[k] !== 'boolean') fail(`${at}.${k}`, 'deve ser true ou false');
@@ -108,6 +124,7 @@ export function validate(catalog, root) {
       for (const [k, hosts] of Object.entries(HOSTS)) {
         const v = app.links[k];
         if (v === null || v === undefined) continue;
+        if (!platforms.includes(k)) fail(`${at}.links.${k}`, `plataforma ${k} não está em platforms`);
         const u = httpsUrl(v, `${at}.links.${k}`, hosts);
         if (u && k === 'android' && (u.pathname !== '/store/apps/details' ||
           !app.packageName || u.searchParams.get('id') !== app.packageName))
@@ -115,6 +132,9 @@ export function validate(catalog, root) {
       }
       if (app.published === true && !Object.values(app.links).some(Boolean))
         fail(`${at}.links`, 'app publicado precisa de ao menos um link');
+      // Evita divulgar link de instalação, piloto ou ambiente de desenvolvimento.
+      if (app.status === 'coming_soon' && (Object.values(app.links).some((l) => l !== null) || app.websiteUrl !== null))
+        fail(`${at}`, 'app "em breve" deve ter links e websiteUrl null');
     }
 
     if ('regions' in app && shape(app.regions, `${at}.regions`, [], ['include', 'exclude'])) {

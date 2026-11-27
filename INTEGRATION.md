@@ -59,6 +59,10 @@ Esta descrição é o contrato para **leitura**. O validador do repositório é 
           }
         },
         "published": { "type": "boolean" },
+        "status": { "type": "string", "examples": ["published", "coming_soon", "hidden"] },
+        "category": { "$ref": "#/$defs/i18n" },
+        "platforms": { "type": "array", "items": { "type": "string", "examples": ["android", "ios", "web", "pwa"] } },
+        "websiteUrl": { "type": ["string", "null"] },
         "featured": { "type": "boolean" },
         "order": { "type": "integer" },
         "regions": {
@@ -73,6 +77,20 @@ Esta descrição é o contrato para **leitura**. O validador do repositório é 
   }
 }
 ```
+
+`status`, `category`, `platforms` e `websiteUrl` do app são adições opcionais da v1 (fora de `required`).
+`category` é texto traduzido, como a descrição.
+
+## Estados
+
+| `status` | `published` | Como tratar |
+| --- | --- | --- |
+| `published` | `true` | Disponível. Pode ter botão de instalação. |
+| `coming_soon` | `false` | "Em breve": **sem** botão, link ou data. Exibir é opcional. |
+| `hidden` | `false` | Não exibir. |
+
+`published` continua sendo o campo de compatibilidade: apps que só o conhecem veem apenas os publicados.
+Se `status` estiver ausente, use só `published`. Valor desconhecido ou combinação divergente: não exiba.
 
 ## Carregamento e cache
 
@@ -105,14 +123,17 @@ Se o texto faltar: `en`, depois `pt-BR`; se não houver nenhum, oculte o texto.
 
 Na ordem:
 
-1. Somente `published === true` (booleano). Ausente ou outro tipo não é publicado.
+1. Disponíveis: somente `published === true` (booleano) e `status` ausente ou `"published"`.
+   Uma seção "Em breve" opcional usa `published === false` e `status === "coming_soon"`.
 2. **Excluir o próprio app:** compare `id` com uma constante interna (ex.: `"odomo"`) **ou**, se não nulo,
    `packageName` com o pacote em execução. Use os dois, pois `packageName` pode ser `null`.
 3. Região: use o país das configurações do aparelho (ISO 3166-1 alfa-2), **sem pedir localização** e sem
    enviá-lo. `include`: mostre só se o país estiver na lista (desconhecido: oculte).
    `exclude`: oculte se estiver na lista (desconhecido: mostre).
-4. Mantenha apps com link válido para a plataforma atual: `links.android` no Android, `links.ios` no iOS,
-   `links.web` na Web. Fora da Web, não troque o link da loja por outro sem decisão explícita do app.
+4. Nos disponíveis, mantenha apps com link válido para a plataforma atual: `links.android` no Android,
+   `links.ios` no iOS, `links.web` na Web. Fora da Web, não troque o link da loja por outro sem decisão
+   explícita do app. `websiteUrl` é página informativa, **não** link de instalação. "Em breve" não exige link;
+   ignore qualquer link que venha nesses itens.
 5. Ordene por `featured` (true primeiro), `order` crescente e `name`.
 
 Lista vazia é um resultado válido: oculte a seção. Item inválido é descartado sozinho, sem rejeitar o catálogo.
@@ -126,7 +147,7 @@ Trate o catálogo como entrada não confiável. A lista de destinos fica **fixa 
 | `links.android` | `https://play.google.com/store/apps/details?id=...` |
 | `links.ios` | `https://apps.apple.com/...` |
 | `links.web` | `https://danilloasantos.github.io/...` |
-| `developer.websiteUrl` | HTTPS; abrir apenas no navegador externo |
+| `developer.websiteUrl` e `apps[].websiteUrl` | HTTPS; abrir apenas no navegador externo |
 
 Exija esquema `https` e host **exato** (nada de `contains` ou `endsWith`), sem usuário, senha ou porta.
 Abra links no navegador ou na loja, nunca em WebView com ponte nativa. Mostre os textos como texto puro.
