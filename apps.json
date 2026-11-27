@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-27T15:37:17Z",
+  "updatedAt": "2026-11-27T15:50:30Z",
   "developer": {
     "displayName": "Danillo Santos",
     "brand": "DAS Apps",
@@ -38,9 +38,9 @@
       "packageName": "com.danilloasantos.puller",
       "category": { "pt-BR": "Enquetes e votações", "en": "Polls & voting", "es": "Encuestas y votaciones" },
       "description": {
-        "pt-BR": "Crie enquetes, compartilhe perguntas e descubra a opinião das pessoas. Uma maneira simples e prática de realizar votações e tomar decisões em grupo.",
-        "en": "Create polls, share questions and find out what people think. A simple, practical way to run votes and make group decisions.",
-        "es": "Crea encuestas, comparte preguntas y descubre lo que opina la gente. Una forma simple y práctica de hacer votaciones y tomar decisiones en grupo."
+        "pt-BR": "Crie enquetes em que as respostas são pessoas dos seus contatos, compartilhe perguntas e descubra a opinião das pessoas. Uma maneira simples e prática de realizar votações e tomar decisões em grupo.",
+        "en": "Create polls where the answers are people from your contacts, share questions and find out what people think. A simple, practical way to run votes and make group decisions.",
+        "es": "Crea encuestas en las que las respuestas son personas de tus contactos, comparte preguntas y descubre lo que opina la gente. Una forma simple y práctica de hacer votaciones y tomar decisiones en grupo."
       },
       "iconUrl": "assets/apps/puller.png",
       "platforms": ["android"],
