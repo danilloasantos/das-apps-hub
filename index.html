@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Apps</title>
+<link rel="icon" href="data:,">
+<style>
+  :root { color-scheme: light dark; --bg:#f6f7f9; --card:#fff; --text:#15181d; --muted:#5b6472; --line:#e2e6ec; --accent:#2457d6; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0f1115; --card:#181b21; --text:#eef0f4; --muted:#a4adbb; --line:#2a2f38; --accent:#7ea2ff; } }
+  * { box-sizing: border-box; }
+  body { margin:0; font:16px/1.55 system-ui, sans-serif; background:var(--bg); color:var(--text); }
+  main { max-width:920px; margin:0 auto; padding:20px 16px 56px; }
+  [hidden] { display:none !important; }
+  nav { display:flex; justify-content:flex-end; gap:6px; }
+  button { font:inherit; font-size:14px; padding:5px 12px; border:1px solid var(--line); border-radius:99px; background:var(--card); color:var(--text); cursor:pointer; }
+  button[aria-pressed="true"] { border-color:var(--accent); color:var(--accent); font-weight:600; }
+  header { text-align:center; padding:28px 0 36px; }
+  .mark { display:grid; place-items:center; overflow:hidden; flex:none; background:var(--accent); color:var(--bg); font-weight:700; }
+  .mark img { width:100%; height:100%; object-fit:cover; }
+  #avatar { width:112px; height:112px; border-radius:50%; margin:0 auto 16px; font-size:38px; }
+  h1 { margin:0; font-size:1.9rem; }
+  #brand { margin:2px 0 14px; color:var(--accent); font-weight:600; }
+  #bio { max-width:56ch; margin:0 auto; color:var(--muted); }
+  h2 { font-size:1.15rem; }
+  #apps { display:grid; gap:14px; grid-template-columns:repeat(auto-fill, minmax(min(280px,100%),1fr)); padding:0; list-style:none; }
+  #apps li { display:flex; flex-direction:column; gap:12px; padding:18px; background:var(--card); border:1px solid var(--line); border-radius:16px; }
+  #apps li.featured { border-color:var(--accent); }
+  .head { display:flex; align-items:center; gap:12px; }
+  .head .mark { width:56px; height:56px; border-radius:14px; font-size:22px; }
+  h3 { margin:0; font-size:1.05rem; }
+  .badge { font-size:12px; color:var(--accent); }
+  #apps p { margin:0; color:var(--muted); flex:1; }
+  .links { display:flex; flex-wrap:wrap; gap:8px; }
+  .links a { padding:7px 14px; border:1px solid var(--accent); border-radius:10px; color:var(--accent); text-decoration:none; font-size:14px; }
+  a:focus-visible, button:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+  #status { text-align:center; color:var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <nav id="langs" aria-label="Idioma / Language"></nav>
+  <header>
+    <div id="avatar" class="mark" role="img">DS</div>
+    <h1 id="name"></h1>
+    <div id="brand"></div>
+    <p id="bio"></p>
+    <p><a id="website" hidden rel="noopener noreferrer"></a></p>
+  </header>
+  <section>
+    <h2 id="title" hidden></h2>
+    <ul id="apps"></ul>
+    <p id="status" role="status">…</p>
+  </section>
+  <noscript><p>JavaScript é necessário. <a href="apps.json">apps.json</a></p></noscript>
+</main>
+<script>
+'use strict';
+// Somente textos de interface. Dados do desenvolvedor e dos apps vêm de apps.json.
+const UI = {
+  'pt-BR': { label:'PT', apps:'Aplicativos', empty:'Nenhum aplicativo publicado ainda.', error:'Não foi possível carregar o catálogo.', retry:'Tentar novamente', featured:'Destaque', website:'Site', web:'Abrir na Web' },
+  en: { label:'EN', apps:'Apps', empty:'No published apps yet.', error:'Could not load the catalog.', retry:'Try again', featured:'Featured', website:'Website', web:'Open web app' },
+  es: { label:'ES', apps:'Aplicaciones', empty:'Todavía no hay aplicaciones publicadas.', error:'No se pudo cargar el catálogo.', retry:'Reintentar', featured:'Destacada', website:'Sitio web', web:'Abrir en la web' }
+};
+const HOSTS = { android:['play.google.com'], ios:['apps.apple.com'], web:['danilloasantos.github.io'] };
+const LABELS = { android:'Google Play', ios:'App Store' };
+const $ = (id) => document.getElementById(id);
+const el = (tag, props = {}) => Object.assign(document.createElement(tag), props);
+
+let catalog = null, failed = false;
+let lang = pickLang(readSaved() || navigator.language);
+
+function readSaved() { try { return localStorage.getItem('lang'); } catch { return null; } }
+function pickLang(tag) {
+  const base = String(tag).slice(0, 2).toLowerCase();
+  return base === 'pt' ? 'pt-BR' : base === 'es' ? 'es' : 'en';
+}
+function safeUrl(value, hosts) {
+  try {
+    const u = new URL(value);
+    return u.protocol === 'https:' && !u.username && !u.password && !u.port &&
+      (!hosts || hosts.includes(u.hostname)) ? u.href : null;
+  } catch { return null; }
+}
+function fillMark(node, path, fallback) {
+  node.textContent = fallback;
+  if (typeof path !== 'string' || !/^assets\/[\w\/-][\w.\/-]*(\?v=\d+)?$/.test(path) || path.includes('..')) return;
+  const img = el('img', { alt:'' });
+  img.onload = () => node.replaceChildren(img);
+  img.src = path;
+}
+
+function card(app) {
+  const li = el('li', { className: app.featured ? 'featured' : '' });
+  const head = el('div', { className:'head' });
+  const icon = el('div', { className:'mark' });
+  icon.setAttribute('aria-hidden', 'true');
+  fillMark(icon, app.iconUrl, app.name.charAt(0).toUpperCase());
+  const title = el('div');
+  title.append(el('h3', { textContent: app.name }));
+  if (app.featured) title.append(el('span', { className:'badge', textContent:'★ ' + UI[lang].featured }));
+  head.append(icon, title);
+  const links = el('div', { className:'links' });
+  for (const key of Object.keys(HOSTS)) {
+    const href = safeUrl(app.links?.[key], HOSTS[key]);
+    if (href) links.append(el('a', { href, textContent: LABELS[key] || UI[lang].web, rel:'noopener noreferrer' }));
+  }
+  li.append(head, el('p', { textContent: app.description?.[lang] || app.description?.en || '' }), links);
+  return li;
+}
+
+function render() {
+  const t = UI[lang];
+  document.documentElement.lang = lang;
+  $('langs').replaceChildren(...Object.keys(UI).map((code) => {
+    const b = el('button', { type:'button', textContent: UI[code].label, onclick: () => {
+      lang = code;
+      try { localStorage.setItem('lang', code); } catch {}
+      render();
+    } });
+    b.setAttribute('aria-pressed', String(code === lang));
+    return b;
+  }));
+  $('title').textContent = t.apps;
+  if (failed) {
+    $('status').replaceChildren(t.error + ' ', el('button', { type:'button', textContent:t.retry, onclick:load }));
+    return;
+  }
+  if (!catalog) return;
+  const dev = catalog.developer;
+  $('name').textContent = dev.displayName;
+  $('brand').textContent = dev.brand;
+  $('bio').textContent = dev.bio?.[lang] || dev.bio?.en || '';
+  $('avatar').setAttribute('aria-label', dev.displayName);
+  fillMark($('avatar'), dev.avatarUrl, 'DS');
+  document.title = dev.displayName + ' — ' + dev.brand;
+  const site = safeUrl(dev.websiteUrl);
+  $('website').hidden = !site;
+  if (site) Object.assign($('website'), { href:site, textContent:t.website });
+  const apps = catalog.apps.filter((a) => a.published === true && typeof a.name === 'string')
+    .sort((a, b) => (b.featured === true) - (a.featured === true) || a.order - b.order || a.name.localeCompare(b.name));
+  $('apps').replaceChildren(...apps.map(card));
+  $('title').hidden = false;
+  $('status').textContent = apps.length ? '' : t.empty;
+}
+
+async function load() {
+  failed = false;
+  $('status').textContent = '…';
+  try {
+    const res = await fetch('apps.json', { cache:'no-cache', signal: AbortSignal.timeout(10000) });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (data.schemaVersion !== 1 || !data.developer || !Array.isArray(data.apps)) throw new Error('schema');
+    catalog = data;
+  } catch { failed = true; }
+  render();
+}
+
+render();
+load();
+</script>
+</body>
+</html>

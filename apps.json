@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-11-27T13:35:58Z",
+  "developer": {
+    "displayName": "Danillo Santos",
+    "brand": "DAS Apps",
+    "avatarUrl": null,
+    "bio": {
+      "pt-BR": "Danillo Santos desenvolve os aplicativos da marca DAS Apps.",
+      "en": "Danillo Santos develops the apps of the DAS Apps brand.",
+      "es": "Danillo Santos desarrolla las aplicaciones de la marca DAS Apps."
+    },
+    "websiteUrl": null
+  },
+  "apps": [
+    {
+      "id": "odomo",
+      "name": "Odomo",
+      "packageName": null,
+      "description": {
+        "pt-BR": "Aplicativo do ecossistema DAS Apps. Mais informações em breve.",
+        "en": "An app from the DAS Apps ecosystem. More information coming soon.",
+        "es": "Aplicación del ecosistema DAS Apps. Más información próximamente."
+      },
+      "iconUrl": null,
+      "links": { "android": null, "ios": null, "web": null },
+      "published": false,
+      "featured": false,
+      "order": 10
+    },
+    {
+      "id": "puller",
+      "name": "Puller",
+      "packageName": null,
+      "description": {
+        "pt-BR": "Aplicativo do ecossistema DAS Apps. Mais informações em breve.",
+        "en": "An app from the DAS Apps ecosystem. More information coming soon.",
+        "es": "Aplicación del ecosistema DAS Apps. Más información próximamente."
+      },
+      "iconUrl": null,
+      "links": { "android": null, "ios": null, "web": null },
+      "published": false,
+      "featured": false,
+      "order": 20
+    }
+  ]
+}
